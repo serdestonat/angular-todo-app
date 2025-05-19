@@ -13,10 +13,16 @@
       class="todo-section pending"
     >
       <div class="section-header">
-        <h2>Yapılacaklar ({{ pendingTodos.length }})</h2>
+        <h2>ToDo's ({{ pendingTodos.length }})</h2>
       </div>
       <div class="scrollable-list">
-        <app-todo-list [todos]="pendingTodos"></app-todo-list>
+        <div *ngIf="pendingTodos.length === 0" class="empty-message">
+          Add new task from the bottom right corner.
+        </div>
+        <app-todo-list
+          *ngIf="pendingTodos.length > 0"
+          [todos]="pendingTodos"
+        ></app-todo-list>
       </div>
     </div>
 
@@ -29,10 +35,17 @@
       class="todo-section completed"
     >
       <div class="section-header">
-        <h2>Tamamlandı ({{ completedTodos.length }})</h2>
+        <h2>Completed ({{ completedTodos.length }})</h2>
       </div>
       <div class="scrollable-list">
-        <app-todo-list [todos]="completedTodos"></app-todo-list>
+        <div *ngIf="completedTodos.length === 0" class="empty-message">
+          You can either drag and drop the task you completed or you can check
+          the checkbox.
+        </div>
+        <app-todo-list
+          *ngIf="completedTodos.length > 0"
+          [todos]="completedTodos"
+        ></app-todo-list>
       </div>
     </div>
   </div>
@@ -54,17 +67,17 @@
     (click)="$event.stopPropagation()"
   >
     <div class="card-content">
-      <h3>{{ editingTodo ? "Görevi Düzenle" : "Yeni Görev Ekle" }}</h3>
+      <h3>{{ editingTodo ? "Edit Task" : "Add New Task" }}</h3>
       <input
         type="text"
         [(ngModel)]="newTodoTitle"
-        placeholder="Görev başlığı"
+        placeholder="What's the task ?"
         (keyup.enter)="handleSave()"
       />
       <div class="card-actions">
-        <button class="cancel-btn" (click)="closeModal()">Vazgeç</button>
+        <button class="cancel-btn" (click)="closeModal()">Cancel</button>
         <button class="save-btn" (click)="handleSave()">
-          {{ editingTodo ? "Güncelle" : "Kaydet" }}
+          {{ editingTodo ? "Update" : "Save" }}
         </button>
       </div>
     </div>

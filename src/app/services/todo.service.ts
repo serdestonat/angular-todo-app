@@ -31,7 +31,7 @@ export class TodoService {
       completed: false,
       createdAt: new Date(),
     };
-    this.saveTodos([...todos, newTodo]);
+    this.saveTodos([newTodo, ...todos]);
   }
 
   toggleTodo(id: string): void {

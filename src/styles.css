@@ -195,6 +195,12 @@ header h1 {
   z-index: 1001 !important; /* Modal'ın üzerinde görünsün */
 }
 
+.empty-message {
+  padding: 1rem;
+  text-align: left;
+  color: #888;
+}
+
 /* Responsive Tasarım */
 @media (min-width: 768px) {
   .lists-container {

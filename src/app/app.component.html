@@ -32,10 +32,7 @@
         <h2>Tamamlandı ({{ completedTodos.length }})</h2>
       </div>
       <div class="scrollable-list">
-        <app-todo-list
-          [todos]="completedTodos"
-          [isCompleted]="true"
-        ></app-todo-list>
+        <app-todo-list [todos]="completedTodos"></app-todo-list>
       </div>
     </div>
   </div>

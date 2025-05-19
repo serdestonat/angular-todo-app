@@ -51,6 +51,8 @@ header h1 {
   flex-direction: column;
   max-height: 70vh; /* Maksimum yükseklik */
   height: auto;
+  position: relative; /* Z-index context oluştur */
+  z-index: 1;
 }
 
 .section-header {
@@ -71,6 +73,7 @@ header h1 {
   padding: 10px;
   flex-grow: 1; /* Kalan alanı doldur */
   max-height: 54vh;
+  scroll-behavior: smooth;
 }
 
 /* Floating Add Button */
@@ -186,6 +189,10 @@ header h1 {
   background: #4caf50;
   color: white;
   border: none;
+}
+
+.cdk-drag-preview {
+  z-index: 1001 !important; /* Modal'ın üzerinde görünsün */
 }
 
 /* Responsive Tasarım */

@@ -8,12 +8,11 @@ export class TodoService {
   private editModalState = new BehaviorSubject<{
     isOpen: boolean;
     todo?: Todo;
-  }>({
-    isOpen: false,
-    todo: undefined,
-  });
+  }>({ isOpen: false });
+  private todosChanged = new BehaviorSubject<void>(undefined); // ✅ eklendi
 
   editModalState$ = this.editModalState.asObservable();
+  todosChanged$ = this.todosChanged.asObservable(); // ✅ eklendi
 
   getTodos(): Todo[] {
     return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
@@ -21,6 +20,7 @@ export class TodoService {
 
   saveTodos(todos: Todo[]): void {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(todos));
+    this.todosChanged.next(); // ✅ Tetikle
   }
 
   addTodo(title: string): void {
@@ -46,7 +46,10 @@ export class TodoService {
     this.saveTodos(todos);
   }
 
-  reorderTodos(todos: Todo[]): void {
+  updateTodo(updatedTodo: Todo) {
+    const todos = this.getTodos().map((t) =>
+      t.id === updatedTodo.id ? updatedTodo : t
+    );
     this.saveTodos(todos);
   }
 
@@ -58,10 +61,7 @@ export class TodoService {
     this.editModalState.next({ isOpen: false });
   }
 
-  updateTodo(updatedTodo: Todo) {
-    const todos = this.getTodos().map((t) =>
-      t.id === updatedTodo.id ? updatedTodo : t
-    );
+  reorderTodos(todos: Todo[]): void {
     this.saveTodos(todos);
   }
 }

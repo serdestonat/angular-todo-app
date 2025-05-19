@@ -22,23 +22,4 @@ export class TodoListComponent {
   @Input() isCompleted = false;
 
   constructor(public todoService: TodoService) {}
-
-  onDrop(event: CdkDragDrop<Todo[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
-    // Ana listeyi güncelle
-    this.todoService.saveTodos([...this.todoService.getTodos()]);
-  }
 }

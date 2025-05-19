@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TodoService } from './services/todo.service';
@@ -23,8 +23,9 @@ export class AppComponent {
   newTodoTitle = '';
   editingTodo: Todo | null = null;
 
-  constructor(public todoService: TodoService) {
+  constructor(public todoService: TodoService, private cdr: ChangeDetectorRef) {
     this.todoService.editModalState$.subscribe((state) => {
+      // this.cdr.detectChanges();
       this.showAddCard = state.isOpen;
       if (state.todo) {
         this.editingTodo = state.todo;
@@ -33,12 +34,21 @@ export class AppComponent {
     });
   }
 
-  get pendingTodos(): Todo[] {
-    return this.todoService.getTodos().filter((t) => !t.completed);
+  pendingTodos: Todo[] = [];
+  completedTodos: Todo[] = [];
+
+  ngOnInit() {
+    this.updateLists();
+    this.todoService.todosChanged$.subscribe(() => {
+      this.updateLists();
+    });
   }
 
-  get completedTodos(): Todo[] {
-    return this.todoService.getTodos().filter((t) => t.completed);
+  private updateLists() {
+    const allTodos = this.todoService.getTodos();
+    this.pendingTodos = allTodos.filter((t) => !t.completed);
+    this.completedTodos = allTodos.filter((t) => t.completed);
+    this.cdr.detectChanges();
   }
 
   onTodoDrop(event: CdkDragDrop<Todo[]>) {
@@ -55,12 +65,15 @@ export class AppComponent {
         event.previousIndex,
         event.currentIndex
       );
-      // Durum güncelleme
+
+      // ✅ Item’ları tamamlanma durumuna göre güncelle
       event.container.data.forEach((item) => {
         item.completed = event.container.id === 'completed';
       });
     }
-    this.todoService.saveTodos([...this.pendingTodos, ...this.completedTodos]);
+
+    const allTodos = [...this.pendingTodos, ...this.completedTodos];
+    this.todoService.saveTodos(allTodos); // Bu satır zaten todosChanged'i tetikliyor
   }
 
   addTodo() {
